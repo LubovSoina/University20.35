@@ -1,12 +1,10 @@
-                                              #Найдем авторов активностей
-    select aa.activityID,
-           group_concat(au.title separator ', ') as activity_authors #Cгруппируем их в одну строку так как у одного мероприятий может быть несколько авторов
+  with activity_authors as (select aa.activityID,                            #Найдем авторов активностей
+           group_concat(au.title separator ', ') as activity_authors          #Cгруппируем их в одну строку так как у одного мероприятий может быть несколько авторов
     from labs.activity_author aa
              left join labs.author au on aa.authorID = au.id
     group by aa.activityID
 ),
-     event_authors as (                       #Найдем авторов мероприятий
-
+     event_authors as (                                                       #Найдем авторов мероприятий
          select ea.eventID,
                 group_concat(au.title separator ', ') as activity_authors   #Сгруппируем их в одну строку так как у одного мероприятий может быть несколько авторов
          from labs.event_author ea
