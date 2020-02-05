@@ -1,43 +1,42 @@
-                                              #Найдем авторов активностей, сгруппируем их в одну строку так как у одной активности может быть несколько авторов
-with activity_authors as (
+                                              #Найдем авторов активностей
     select aa.activityID,
-           group_concat(au.title separator ', ') as activity_authors
+           group_concat(au.title separator ', ') as activity_authors #Cгруппируем их в одну строку так как у одного мероприятий может быть несколько авторов
     from labs.activity_author aa
              left join labs.author au on aa.authorID = au.id
     group by aa.activityID
 ),
-     event_authors as (                       #Найдем авторов мероприятий, сгруппируем их в одну строку так как у одного мероприятий может быть несколько авторов
+     event_authors as (                       #Найдем авторов мероприятий
 
          select ea.eventID,
-                group_concat(au.title separator ', ') as activity_authors
+                group_concat(au.title separator ', ') as activity_authors   #Сгруппируем их в одну строку так как у одного мероприятий может быть несколько авторов
          from labs.event_author ea
                   left join labs.author au on ea.authorID = au.id
          group by ea.eventID
      ),
-     reflex as (
+     reflex as (                                                            #Обратная связь
          select e.id                       as e_id,
-                count(distinct ufa.userID) as user_feedback
+                count(distinct ufa.userID) as user_feedback                 # Посчтаем сколько людей оставили обратную связь
          FROM labs.user_feedback_answer ufa
-                  left join labs.event e on e.id = ufa.eventID
-         where ufa.value is not null
+                  left join labs.event e on e.id = ufa.eventID             
+         where ufa.value is not null                                        # Не учитываем тех, у кого пустые значения в ОС
             or ufa.data is not null
          group by e.id
      ),
-     checkin as (
+     checkin as (                                                           #Чекины
          select e.id           as e_id,
                 sum(c.checkin) as checkins
          from labs.checkin c
                   left join labs.event e on e.id = c.eventID
          group by e.id
      ),
-     attendance as (
+     attendance as (                                                        #Посещаемость
          select e.id              as e_id,
                 sum(c.attendance) as attendance
          from labs.checkin c
                   left join labs.event e on e.id = c.eventID
          group by e.id
      ),
-     recorded as (
+     recorded as (                                                          #Записано людей
          select r.id                       as r_ID,
                 count(distinct uar.userID) as users
          from labs.user_activity_request uar
@@ -89,8 +88,8 @@ from labs.activity a
          left join checkin ch on ch.e_id = e.id
          left join attendance att on att.e_id = e.id
          left join recorded rec on rec.r_ID = r.id
-where c.id in (142, 146, 132, 130, 153, 135, 145, 139, 166, 140, 167, 144, 147, 131, 175)
-  and e.isDeleted = 0
+where c.id in (142, 146, 132, 130, 153, 135, 145, 139, 166, 140, 167, 144, 147, 131, 175)     #Здесь айди контекстов из LABS (!!!), можно добавить (вставить в скобки числа через запятую) 
+  and e.isDeleted = 0                                                                         #или убрать (удалить ненужные айди)
   and a.isDeleted = 0
-  and r.isDeleted = 0
-order by c.title
+  and r.isDeleted = 0          #Не учитывать удаленные прогоны активности и мероприятия 
+order by c.title    
