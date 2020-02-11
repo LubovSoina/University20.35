@@ -3,6 +3,7 @@ select distinct pta.external_type              as                               
                 date(pta.server_creation_time) as                                                              date_of_action,
 
                 c.title                        as                                                              context,
+                с.id as contextID,
                 t.title                        as                                                              team,
                 t.id                           as                                                              teamID,
                 concat('https://trello.com/c/', json_unquote(json_extract(pta.data, '$.data.card.shortLink'))) card_link
