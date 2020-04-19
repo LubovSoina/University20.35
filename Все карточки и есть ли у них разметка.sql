@@ -10,8 +10,8 @@ from (select c.id                                          as   contextID,
 
 
       from people.journal j
-               left join people.team_user tu on tu.userID = j.creatorID
-               left join people.team t on tu.teamID = t.id
+               left join people.team_user tu on tu.userID = j.userID
+               left join people.user_info ui on j.userID=ui.userID 
                left join people.context_team ct on ct.teamID = t.id
                left join people.context c on c.id = ct.contextID
                left join labs.context cc on cc.uuid = c.uuid
