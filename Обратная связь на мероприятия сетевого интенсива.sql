@@ -16,7 +16,7 @@ FROM labs.event le
          left join (select ufa.id ufa_id, ufa.value, fq.title, fq.id fq_id, ufa.eventID, ufa.userID
                     from labs.user_feedback_answer ufa
                              left join labs.feedback_question fq on fq.id = ufa.feedbackQuestionID
-                    where fq.id not in (44)) ufa on le.id = ufa.eventID
+                   ) ufa on le.id = ufa.eventID
 
          left join labs.timeslot ti on le.timeslotID = ti.id
          left join labs.run r on r.id = le.runID
