@@ -31,4 +31,4 @@ from (select * from people.team t where t.active = 1 and t.createDT > '2020-04-1
          left join people.tag tag on ut.tagID = tag.id
 where  tag.guid like '%ss20%'
 group by c.id, c.title, t.title, t.id, ui.leaderID, p.id,
-         concat(ui.lastname, ' ', ui.firstname, ' ', ui.middlename), tu.role
+         concat(ui.lastname, ' ', ui.firstname, ' ', ui.middlename)
