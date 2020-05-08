@@ -5,7 +5,7 @@ select distinct c.id                                                        cont
                 concat('https://pt.2035.university/team/view?id=', t.id) as pt_team_link,
                 ui.leaderID,
                 concat(ui.lastname, ' ', ui.firstname, ' ', ui.middlename)  FIO,
-                group_concat(distinct tu.role),
+                group_concat(distinct tu.role) roles,
                 group_concat(distinct tag.guid)                             tags,
                 t.createDT                                                  team_create_date,
                 u.title                                                     uni,
