@@ -31,10 +31,10 @@ select distinct tr.title,tr.id trackid,
                 timediff(time(t.startDT), '-03:00:00') as 'Время начала мероприятия',
                 date(t.endDT)                          as 'Дата конца мероприятия',
                 timediff(time(t.endDT), '-03:00:00')   as 'Время конца мероприятия',
-                br.title                               as block_result_title,
-                b.title                                as block_title,
-                br.meta,
-                br.format,
+                group_concat(distinct br.title)                               as block_result_title,
+                group_concat(distinct b.title)                                as block_title,
+                group_concat(distinct br.meta),
+                group_concat(distinct br.format),
                 ea.activity_authors                    as 'Авторы мероприятия',
                 r.isRequest                            as isRequest,
                 a.requestType                          as 'Тип записи'
@@ -59,3 +59,4 @@ where tr.id in (206, 207, 208, 209, 212, 213, 214, 215, 216, 217, 218, 219, 220,
   and e.isDeleted = 0
   and a.isDeleted = 0
   and r.isDeleted = 0 and c.id = 252
+group by e.id, tr.id, a.id, a.title, a.description, a.short, a.createDT, aa.activity_authors, ty.title, r.id, r.startRequest, r.endRequest, tr.title, e.title, e.description, e.createDT, place.capacity, date(t.startDT), timediff(time(t.startDT), '-03:00:00'), date(t.endDT), timediff(time(t.endDT), '-03:00:00'), ea.activity_authors, r.isRequest, a.requestType
