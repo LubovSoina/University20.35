@@ -1,4 +1,4 @@
-    select t.id                                                                                                           as trackID,
+ select t.id                                                                                                           as trackID,
      t.title as track,
        a.id as activityID,
        a.title as activity,
@@ -34,4 +34,4 @@ where c.id = 252
   and le.isDeleted = 0
   and a.isDeleted = 0
   and r.isDeleted = 0 and ufa.value is not null
-group by ufa.ufa_id, le.id, le.title, date(ti.startDT), t.id, ufa.value, ufa.title, ufa.fq_id
+group by ufa.userID, t.title, a.id, a.title, le.id, le.title, date(ti.startDT), t.id, ufa.ufa_id, ufa.value, ufa.title, ufa.fq_id
