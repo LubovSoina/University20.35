@@ -37,7 +37,8 @@ from (select *
                        'p1_chuvsu_student_ss20',
                        'p1_sfu_student_ss20',
                        'p1_ugrasu_student_ss20',
-                       'p0_student_ss20')) t
+                       'p0_student_ss20',
+                       'p0_tracker_ss20')) t
          inner join ple.user_tag ut on ut.tagID = t.id
          inner join ple.user_info ui on ut.userID = ui.userID
          inner join ple.user_edurequest ue on ui.userID = ue.userID
