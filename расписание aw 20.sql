@@ -45,6 +45,7 @@ with activity_authors as (select aa.activityID,
 select distinct c.id                                   as contextID,
                 c.title                                as context_title,
                 dd.title                                  department,
+                tr.title track,
                 a.id                                   as activityID,
                 a.title                                as activity_title,
                 a.description                          as 'Описание активности',
@@ -88,7 +89,8 @@ from labs.activity a
                             323,
                             324, 331, 338, 325, 326, 340, 327, 328, 329, 330, 343, 285, 286, 290, 287)) ca
                     on ca.activityID = a.id
-
+         left join labs.activity_track ar on a.id = ar.activityID
+         left join labs.track tr on ar.trackID = tr.id
          left join labs.run r on r.activityID = a.id
          left join labs.event e on e.runID = r.id
          left join labs.place on place.id = e.placeID
