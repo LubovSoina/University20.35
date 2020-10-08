@@ -42,10 +42,13 @@ with activity_authors as (select aa.activityID,
          where uar.status = 'approved'
          group by r.id
      )
-select distinct c.id                                   as contextID,
-                c.title                                as context_title,
+select distinct c1.id                                  as parent_contextID,
+                c1.title                               as parent_context_title,
+                c.id                                   as child_contextID,
+                c.title                                as child_context_title,
+
                 dd.title                                  department,
-                tr.title track,
+                tr.title                                  track,
                 a.id                                   as activityID,
                 a.title                                as activity_title,
                 a.description                          as 'Описание активности',
@@ -68,6 +71,7 @@ select distinct c.id                                   as contextID,
                 e.createDT                             as 'Дата создания мероприятия',
                 place.capacity                         as 'Вместимость мероприятия',
                 plt.title                              as 'типа места',
+                room.title 'пространство',
                 date(t.startDT)                        as 'Дата начала мероприятия',
                 timediff(time(t.startDT), '-03:00:00') as 'Время начала мероприятия',
                 date(t.endDT)                          as 'Дата конца мероприятия',
@@ -84,10 +88,11 @@ from labs.activity a
          inner join (select *
                      from labs.context_activity ca
                      where ca.contextID in
-                           (297, 332, 335, 346, 298, 299, 300, 301, 333, 302, 303, 304, 305, 306, 307, 334, 308, 339,
-                            336, 285, 309, 310, 311, 312, 313, 337, 314, 315, 316, 317, 318, 319, 341, 320, 321, 322,
-                            323,
-                            324, 331, 338, 325, 326, 340, 327, 328, 329, 330, 343, 285, 286, 290, 287)) ca
+                           (297, 285, 332, 335, 346, 298, 299, 300, 301, 333, 302, 303, 304, 305, 306, 307, 334, 308,
+                            339, 336, 348, 309, 310,
+                            311, 312, 313, 337, 314, 315, 316, 317, 318, 319, 341, 320, 321, 322, 323, 324, 331, 338,
+                            325, 326, 340,
+                            327, 328, 329, 330, 343)) ca
                     on ca.activityID = a.id
          left join labs.activity_track ar on a.id = ar.activityID
          left join labs.track tr on ar.trackID = tr.id
@@ -95,7 +100,11 @@ from labs.activity a
          left join labs.event e on e.runID = r.id
          left join labs.place on place.id = e.placeID
          left join labs.place_type plt on place.typeID = plt.id
-         left join labs.context c on ca.contextID = c.id
+         left join labs.room room on place.roomID = room.id
+         left join labs.context_relation cr on cr.child_context_id = ca.contextID
+         left join labs.context c on cr.child_context_id = c.id
+         left join labs.context c1 on c1.id = cr.parent_context_id
+
          left join labs.context_department cd on c.id = cd.contextID
          left join labs.department dd on cd.departmentID = dd.id
          left join labs.timeslot t on t.id = e.timeslotID
@@ -120,3 +129,4 @@ group by c.id, c.title, a.id, a.title, a.description, a.short, a.createDT, aa.ac
          r.id, r.startRequest, r.endRequest, e.id, e.title, e.description, e.createDT, place.capacity, date(t.startDT),
          timediff(time(t.startDT), '-03:00:00'), date(t.endDT), timediff(time(t.endDT), '-03:00:00'),
          ea.activity_authors, r.isRequest, a.requestType, rec.users, ch.checkins, att.attendance, ref.user_feedback
+
